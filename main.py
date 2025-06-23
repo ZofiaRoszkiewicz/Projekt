@@ -121,3 +121,35 @@ def pokaz_osoby_dla_ksiegarni(typ):
         lon = sum(o.longitude for o in osoby) / len(osoby)
         map_widget.set_position(lat, lon)
         map_widget.set_zoom(7)
+
+def pokaz_wszystkich_pracownikow():
+    wszystkie = sum(ksiegarnia_pracownicy.values(), [])
+    for o in wszystkie:
+        if o.marker:
+            o.marker.delete()
+        o.marker = map_widget.set_marker(
+            o.latitude,
+            o.longitude,
+            text=f"{o.imie_nazwisko}\n({o.miasto})"
+        )
+    if wszystkie:
+        lat = sum(o.latitude for o in wszystkie) / len(wszystkie)
+        lon = sum(o.longitude for o in wszystkie) / len(wszystkie)
+        map_widget.set_position(lat, lon)
+        map_widget.set_zoom(6)
+
+def pokaz_wszystkich_klientow():
+    wszystkie = sum(ksiegarnia_klienci.values(), [])
+    for o in wszystkie:
+        if o.marker:
+            o.marker.delete()
+        o.marker = map_widget.set_marker(
+            o.latitude,
+            o.longitude,
+            text=f"{o.imie_nazwisko}\n({o.miasto})"
+        )
+    if wszystkie:
+        lat = sum(o.latitude for o in wszystkie) / len(wszystkie)
+        lon = sum(o.longitude for o in wszystkie) / len(wszystkie)
+        map_widget.set_position(lat, lon)
+        map_widget.set_zoom(6)
