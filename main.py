@@ -52,3 +52,26 @@ class Ksiegarnia:
             self.longitude,
             text=self.nazwa.replace("_", " ")
         )
+
+# przypisuje osobę do miasta i księgarni
+class Osoba:
+    def __init__(self, imie_nazwisko, miasto, nazwa_ksiegarni):
+        self.imie_nazwisko = imie_nazwisko
+        self.miasto = miasto
+        self.nazwa_ksiegarni = nazwa_ksiegarni
+        self.latitude, self.longitude = self.get_coordinates()
+        self.marker = None
+
+    def get_coordinates(self):
+        try:
+            url = f"https://nominatim.openstreetmap.org/search.php?q={quote(self.miasto)}&format=jsonv2"
+            headers = {"User-Agent": "Mozilla/5.0"}
+            resp = requests.get(url, headers=headers)
+            data = resp.json()
+            return float(data[0]["lat"]), float(data[0]["lon"])
+        except Exception as e:
+            print(f"Błąd pobierania współrzędnych dla miasta {self.miasto}: {e}")
+            return 52.23, 21.0
+
+class Pracownik(Osoba): pass
+class Klient(Osoba): pass
