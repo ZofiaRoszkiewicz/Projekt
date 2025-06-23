@@ -75,3 +75,49 @@ class Osoba:
 
 class Pracownik(Osoba): pass
 class Klient(Osoba): pass
+
+def pokaz_ksiegarnie():
+    listbox_ksiegarnie.delete(0, END)
+    for i, k in enumerate(ksiegarnie):
+        listbox_ksiegarnie.insert(i, f"{i+1}. {k.nazwa.replace('_', ' ')}")
+
+def pokaz_na_mapie():
+    idx = listbox_ksiegarnie.curselection()
+    if not idx:
+        return
+    ksiegarnia = ksiegarnie[idx[0]]
+    map_widget.set_position(ksiegarnia.latitude, ksiegarnia.longitude)
+    map_widget.set_zoom(13)
+
+def pokaz_wszystkie_ksiegarnie_na_mapie():
+    for k in ksiegarnie:
+        if k.marker:
+            k.marker.delete()
+        k.marker = map_widget.set_marker(k.latitude, k.longitude, text=k.nazwa.replace("_", " "))
+    if ksiegarnie:
+        lat = sum(k.latitude for k in ksiegarnie) / len(ksiegarnie)
+        lon = sum(k.longitude for k in ksiegarnie) / len(ksiegarnie)
+        map_widget.set_position(lat, lon)
+        map_widget.set_zoom(6)
+
+def pokaz_osoby_dla_ksiegarni(typ):
+    idx = listbox_ksiegarnie.curselection()
+    if not idx:
+        return
+    ksiegarnia = ksiegarnie[idx[0]]
+    nazwa = ksiegarnia.nazwa
+    dane = ksiegarnia_pracownicy if typ == "pracownik" else ksiegarnia_klienci
+    osoby = dane.get(nazwa, [])
+    for o in osoby:
+        if o.marker:
+            o.marker.delete()
+        o.marker = map_widget.set_marker(
+            o.latitude,
+            o.longitude,
+            text=f"{o.imie_nazwisko}\n({o.miasto})"
+        )
+    if osoby:
+        lat = sum(o.latitude for o in osoby) / len(osoby)
+        lon = sum(o.longitude for o in osoby) / len(osoby)
+        map_widget.set_position(lat, lon)
+        map_widget.set_zoom(7)
