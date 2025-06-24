@@ -336,7 +336,7 @@ Button(ramka_lista, text="Pokaż wszystkich pracowników", command=pokaz_wszystk
 Button(ramka_lista, text="Pokaż wszystkich klientów", command=pokaz_wszystkich_klientow).pack(pady=2)
 Button(ramka_lista, text="Usuń księgarnię", command=usun_ksiegarnie).pack(pady=2)
 
-Label(ramka_lista, text="Edytuj księgarnię").pack(pady=5)
+Button(ramka_lista, text="Edytuj księgarnię", command=edytuj_ksiegarnie).pack(pady=2)
 entry_nazwa = Entry(ramka_lista, width=40)
 entry_nazwa.pack()
 button_dodaj = Button(ramka_lista, text="Zapisz zmiany", command=dodaj_ksiegarnie_z_listy)
