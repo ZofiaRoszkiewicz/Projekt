@@ -130,7 +130,7 @@ def pokaz_wszystkich_pracownikow():
         o.marker = map_widget.set_marker(
             o.latitude,
             o.longitude,
-            text=f"{o.imie_nazwisko}\n({o.miasto})"
+            text=f"{o.imie_nazwisko}\n({o.miasto})\npracownik"
         )
     if wszystkie:
         lat = sum(o.latitude for o in wszystkie) / len(wszystkie)
@@ -146,7 +146,7 @@ def pokaz_wszystkich_klientow():
         o.marker = map_widget.set_marker(
             o.latitude,
             o.longitude,
-            text=f"{o.imie_nazwisko}\n({o.miasto})"
+            text=f"{o.imie_nazwisko}\n({o.miasto})\nklient"
         )
     if wszystkie:
         lat = sum(o.latitude for o in wszystkie) / len(wszystkie)
