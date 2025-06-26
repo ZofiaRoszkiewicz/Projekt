@@ -100,28 +100,7 @@ def pokaz_wszystkie_ksiegarnie_na_mapie():
         map_widget.set_position(lat, lon)
         map_widget.set_zoom(6)
 
-def pokaz_osoby_dla_ksiegarni(typ):
-    idx = listbox_ksiegarnie.curselection()
-    if not idx:
-        return
-    ksiegarnia = ksiegarnie[idx[0]]
-    nazwa = ksiegarnia.nazwa
-    dane = ksiegarnia_pracownicy if typ == "pracownik" else ksiegarnia_klienci
-    osoby = dane.get(nazwa, [])
-    for o in osoby:
-        if o.marker:
-            o.marker.delete()
-        o.marker = map_widget.set_marker(
-            o.latitude,
-            o.longitude,
-            text=f"{o.imie_nazwisko}\n({o.miasto})"
-        )
-    if osoby:
-        lat = sum(o.latitude for o in osoby) / len(osoby)
-        lon = sum(o.longitude for o in osoby) / len(osoby)
-        map_widget.set_position(lat, lon)
-        map_widget.set_zoom(7)
-
+#
 def pokaz_wszystkich_pracownikow():
     wszystkie = sum(ksiegarnia_pracownicy.values(), [])
     for o in wszystkie:
@@ -153,6 +132,7 @@ def pokaz_wszystkich_klientow():
         lon = sum(o.longitude for o in wszystkie) / len(wszystkie)
         map_widget.set_position(lat, lon)
         map_widget.set_zoom(6)
+
 
 def dodaj_ksiegarnie_z_listy():
     nazwa = entry_nazwa.get().strip()
@@ -226,11 +206,11 @@ def otworz_panel_osob(nazwa_typu, typ_klasy, baza_danych):
     def odswiez():
         listbox.delete(0, END)
         for i, o in enumerate(baza_danych[nazwa_ksiegarni]):
-            listbox.insert(i, f"{i+1}. {o.imie_nazwisko} – {o.miasto}")
+            listbox.insert(i, f"{i + 1}. {o.imie_nazwisko} – {o.miasto}")
 
     def dodaj():
-        imie = entry_imie.get().strip()
-        miasto = entry_miasto.get().strip()
+        imie = entry_imie.get()
+        miasto = entry_miasto.get()
         if not imie or not miasto:
             return
         osoba = typ_klasy(imie, miasto, nazwa_ksiegarni)
@@ -240,13 +220,13 @@ def otworz_panel_osob(nazwa_typu, typ_klasy, baza_danych):
         entry_miasto.delete(0, END)
 
     def usun():
-        sel = listbox.curselection()
-        if not sel:
+        idx = listbox.curselection()
+        if not idx:
             return
-        o = baza_danych[nazwa_ksiegarni][sel[0]]
+        o = baza_danych[nazwa_ksiegarni][idx[0]]
         if o.marker:
             o.marker.delete()
-        baza_danych[nazwa_ksiegarni].pop(sel[0])
+        baza_danych[nazwa_ksiegarni].pop(idx[0])
         odswiez()
 
     def edytuj():
@@ -261,8 +241,8 @@ def otworz_panel_osob(nazwa_typu, typ_klasy, baza_danych):
         button_dodaj.config(text="Zapisz", command=lambda: zapisz(sel[0]))
 
     def zapisz(i_o):
-        imie = entry_imie.get().strip()
-        miasto = entry_miasto.get().strip()
+        imie = entry_imie.get()
+        miasto = entry_miasto.get()
         if not imie or not miasto:
             return
         o = baza_danych[nazwa_ksiegarni][i_o]
@@ -272,7 +252,7 @@ def otworz_panel_osob(nazwa_typu, typ_klasy, baza_danych):
         odswiez()
         entry_imie.delete(0, END)
         entry_miasto.delete(0, END)
-        button_dodaj.config(text=f"Dodaj {nazwa_typu.lower()}", command=dodaj)
+        button_dodaj.config(text=f"Dodaj", command=dodaj)
 
     Label(okno, text="Imię i nazwisko:").pack()
     entry_imie = Entry(okno, width=40)
@@ -282,10 +262,10 @@ def otworz_panel_osob(nazwa_typu, typ_klasy, baza_danych):
     entry_miasto = Entry(okno, width=40)
     entry_miasto.pack()
 
-    button_dodaj = Button(okno, text=f"Dodaj {nazwa_typu.lower()}", command=dodaj)
+    button_dodaj = Button(okno, text=f"Dodaj", command=dodaj)
     button_dodaj.pack(pady=2)
-    Button(okno, text=f"Usuń {nazwa_typu.lower()}", command=usun).pack(pady=2)
-    Button(okno, text=f"Edytuj {nazwa_typu.lower()}", command=edytuj).pack(pady=2)
+    Button(okno, text=f"Usuń ", command=usun).pack(pady=2)
+    Button(okno, text=f"Edytuj ", command=edytuj).pack(pady=2)
 
     odswiez()
 
